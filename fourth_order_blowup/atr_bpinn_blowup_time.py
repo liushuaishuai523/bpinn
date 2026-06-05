@@ -1,0 +1,827 @@
+import argparse
+import os
+import time
+import torch
+import torch.nn as nn
+import numpy as np
+from scipy.integrate import solve_ivp
+import matplotlib.pyplot as plt
+from matplotlib import colors as mcolors
+from scipy.stats import multivariate_normal, truncnorm
+import scipy
+
+# torch.set_default_dtype(torch.float64)
+# 设置随机种子
+np.random.seed(1234)
+torch.manual_seed(1234)
+torch.cuda.manual_seed(1234)
+torch.cuda.manual_seed_all(1234)
+
+###################### 定义超参数 ##################
+parser = argparse.ArgumentParser()
+parser.add_argument('--e', type=int, default=301, help='Epochs')
+parser.add_argument('--number', type=list, default=[200, 100], help='内点，边界取点数')
+parser.add_argument('--ranges', type=list, default=[[0, 5], [0, 0.9598]], help='空间，时间范围')
+parser.add_argument('--beta', type=list, default=[0.04, 1], help='coefficient')
+parser.add_argument('--lr', type=float, default=0.0001, help='learning rate')
+parser.add_argument('--net', type=list, default=[2, 50, 50, 50, 2], help='网络架构')
+parser.add_argument('--filename', type=str, default='atr-BPINN_0dot9598_0dot1_8_5_3', help='保存数据文件名')
+parser.add_argument('--resample', type=int, default=0, choices=[0, 1], help='是否启用重采样 (0:禁用, 1:启用)')
+parser.add_argument('--use_time_loss', type=int, default=0, choices=[0, 1],
+                    help='是否使用时间离散损失 (0:禁用, 1:启用)')
+parser.add_argument('--use_weight', type=int, default=0, choices=[0, 1], help='是否使用自适应权重(0:禁用, 1:启用)')
+parser.add_argument('--weight_p', type=float, default=1.0, help='加权指数 p')
+# 添加损失项的权重参数
+parser.add_argument('--w_pde', type=float, default=0.1, help='PDE损失权重')
+parser.add_argument('--w_bc', type=float, default=8.0, help='边界损失权重')
+parser.add_argument('--w_ini', type=float, default=5.0, help='初始条件损失权重')
+parser.add_argument('--w_g', type=float, default=3.0, help='耦合项损失权重')
+parser.add_argument('--w_time', type=float, default=1.0, help='时间离散损失权重')
+
+# 添加FI-PINNs参数
+parser.add_argument('--use_fi', type=int, default=0, choices=[0, 1], help='是否启用FI-PINNs自适应采样')
+parser.add_argument('--epsilon_r', type=float, default=0.01, help='残差阈值')
+parser.add_argument('--epsilon_p', type=float, default=0.05, help='失败概率阈值')
+parser.add_argument('--sais_N1', type=int, default=500, help='SAIS中每次迭代的样本数')
+parser.add_argument('--sais_p0', type=float, default=0.05, help='SAIS中用于更新的样本比例')
+parser.add_argument('--sais_N2', type=int, default=2000, help='SAIS中用于估计失败概率的样本数')
+parser.add_argument('--sais_max_iter', type=int, default=5, help='SAIS最大迭代次数')
+parser.add_argument('--fi_interval', type=int, default=100, help='FI-PINNs自适应采样间隔(epoch)')
+parser.add_argument('--max_new_points', type=int, default=100, help='每次添加的最大新点数')
+
+# 添加爆破时间预测参数
+parser.add_argument('--predict_blowup', type=int, default=1, choices=[0, 1], help='是否启用爆破时间预测')
+parser.add_argument('--blowup_threshold', type=float, default=100.0, help='爆破判断阈值')
+parser.add_argument('--max_blowup_iter', type=int, default=20, help='爆破预测最大迭代次数')
+parser.add_argument('--blowup_tol', type=float, default=1e-6, help='爆破时间收敛容差')
+
+args = parser.parse_args()
+
+# 全局参数
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+delta = 1
+filename = args.filename
+
+
+######################### 网络定义 #########################
+class Net(torch.nn.Module):
+    def __init__(self):
+        super(Net, self).__init__()
+        # 输入层
+        self.linearIn = nn.Linear(args.net[0], args.net[1])
+        nn.init.xavier_normal_(self.linearIn.weight)
+        nn.init.constant_(self.linearIn.bias, 0)
+
+        # 隐藏层
+        self.linear = nn.ModuleList()
+        for _ in range(len(args.net) - 3):  # 调整隐藏层数量
+            layer = nn.Linear(args.net[1], args.net[1])
+            nn.init.xavier_normal_(layer.weight)
+            nn.init.constant_(layer.bias, 0)
+            self.linear.append(layer)
+
+        # 输出层
+        self.layer1 = nn.Linear(args.net[1], args.net[1])
+        self.linearOut = nn.Linear(args.net[1], args.net[-1])
+        nn.init.xavier_normal_(self.linearOut.weight)
+        nn.init.constant_(self.linearOut.bias, 0)
+
+    def forward(self, X):
+        x = torch.tanh(self.linearIn(X))
+        for layer in self.linear:
+            x = torch.tanh(layer(x))
+        return self.linearOut(x)
+
+
+############################# 函数定义 ######################
+# 边界和源函数
+bd_fun = lambda x: 1
+source_fun_1 = lambda x: 0
+initial_fun = lambda x: 1
+
+
+# 梯度计算
+def grad(y, x):
+    dydx, = torch.autograd.grad(
+        outputs=y,
+        inputs=x,
+        retain_graph=True,
+        grad_outputs=torch.ones_like(y),
+        create_graph=True
+    )
+    return dydx
+
+
+# 物理算子
+def Operator(U, gU, X, domain):
+    U_t = grad(U, X)[:, 1:2]
+    U_tt = grad(U_t, X)[:, 1:2]
+    U_x = grad(U, X)[:, 0:1]
+    U_xx = grad(U_x, X)[:, 0:1]
+    U_xxx = grad(U_xx, X)[:, 0:1]
+    U_xxxx = grad(U_xxx, X)[:, 0:1]
+    gU_t = grad(gU, X)[:, 1:2]
+
+    if domain == 'domain_1':
+        output = delta - U_xxxx / torch.exp(U) + gU_t  # 格式2
+    else:
+        output = 1
+    return output
+
+
+# 自适应时间加权函数
+def group_time_weight_loss(inputs, residuals, p=1.0):
+    with torch.no_grad():
+        t_vals = inputs[:, 1]
+        # 将时间进行粗略离散（避免浮点精度问题），比如保留3位有效数字
+        rounded_t = torch.round(t_vals * 1000) / 1000
+        unique_times = torch.unique(rounded_t)
+
+    loss = 0.0
+    count = 0
+
+    for t in unique_times:
+        mask = (torch.abs(t_vals - t) < 1e-5)
+        res_t = residuals[mask]
+
+        if res_t.numel() == 0:
+            continue
+
+        Tb = args.ranges[1][1]
+        weight = 1.0 / (Tb - t + 1e-8) ** p
+
+        loss += weight * torch.mean(res_t ** 2)
+        count += 1
+
+    return loss / count if count > 0 else torch.tensor(0.0, device=inputs.device)
+
+
+############################### 采样函数 #####################################
+def grow_data(ranges, method, domain):
+    x_mesh = torch.linspace(ranges[0][0], ranges[0][1], steps=args.number[1])
+    y_mesh = torch.linspace(ranges[1][0], ranges[1][1], steps=args.number[1])
+    X, Y = torch.meshgrid(x_mesh, y_mesh, indexing="ij")
+
+    # 生成内部点
+    if method == 'mesh':
+        x_i = torch.stack([X.reshape(-1), Y.reshape(-1)]).T.to(device).requires_grad_(True)
+        # 生成边界点
+        xb1 = torch.stack([X[0], Y[0]]).T  # x_min
+        xb2 = torch.stack([X[-1], Y[0]]).T  # x_max
+        if domain == 'domain_1':
+            x_b = torch.cat([xb1, xb2], dim=0).to(device).requires_grad_(True)
+            x_ini = torch.stack([X[:, 0], Y[:, 0]]).T.to(device).requires_grad_(True)  # t=0
+        else:
+            x_b = torch.cat([xb2, torch.stack([X[:, 0], Y[:, 0]]).T,
+                             torch.stack([X[:, -1], Y[:, -1]]).T], dim=0).to(device)
+            x_ini = torch.stack([X[:, 0], Y[:, 0]]).T.to(device)
+    else:
+        coor = torch.tensor([[ranges[0][0], ranges[1][0]], [ranges[0][1], ranges[1][1]]]).to(device)
+        x_i = coor[0] + (coor[1] - coor[0]) * torch.rand(args.number[0], 2, device=device).requires_grad_(True)
+
+        # 生成边界点
+        xb1 = torch.stack([X[0], Y[0]]).T.to(device)  # x_min
+        xb2 = torch.stack([X[-1], Y[0]]).T.to(device)  # x_max
+
+        if domain == 'domain_1':
+            x_b = torch.cat([xb1, xb2], dim=0).to(device).requires_grad_(True)
+            x_ini = torch.stack([X[:, 0], Y[:, 0]]).T.to(device).requires_grad_(True)  # t=0
+        else:
+            x_b = torch.cat([xb2, torch.stack([X[:, 0], Y[:, 0]]).T,
+                             torch.stack([X[:, -1], Y[:, -1]]).T], dim=0).to(device)
+            x_ini = torch.stack([X[:, 0], Y[:, 0]]).T.to(device)
+
+    return x_i, x_b, x_ini
+
+
+def generate_solution_on_grid(model, x_test, grid_shape):
+    model.eval()
+    g_pred = model(x_test)[:, 1:2]
+    u_pred = -torch.log(torch.abs(g_pred))
+
+    u_pred_x = grad(u_pred, x_test)[:, 0:1]
+    u_pred_t = grad(u_pred, x_test)[:, 1:2]
+
+    u_pred_x_reshaped = u_pred_x.reshape(grid_shape).T.detach().cpu().numpy()
+    u_pred_t_reshaped = u_pred_t.reshape(grid_shape).T.detach().cpu().numpy()
+    u_pred_reshaped = u_pred.reshape(grid_shape).T.detach().cpu().numpy()
+
+    return u_pred_x_reshaped, u_pred_t_reshaped, u_pred_reshaped
+
+
+def plot_heatmap(solution, x_vals, y_vals, name='solution.pdf', title='Solution Heatmap', vmin=None, vmax=None):
+    folder = f'./results/{filename}'
+    os.makedirs(folder, exist_ok=True)
+
+    plt.figure(figsize=(8, 6))
+    contour = plt.contourf(x_vals, y_vals, solution, cmap='viridis', levels=100, vmin=vmin, vmax=vmax)
+    plt.colorbar(contour, label='Value')
+    plt.xlabel('x')
+    plt.ylabel('t')
+    plt.title(title)
+    plt.grid(True)
+    plt.savefig(os.path.join(folder, name), dpi=300, bbox_inches='tight')
+    plt.close()
+
+
+def plot_relative_error(error, x_vals, y_vals, name='relative_error.pdf'):
+    folder = f'./results/{filename}'
+    os.makedirs(folder, exist_ok=True)
+
+    plt.figure(figsize=(8, 6))
+    contour = plt.contourf(x_vals, y_vals, error, cmap='viridis')
+    cbar = plt.colorbar(contour, label='Relative Error')
+    plt.xlabel('x')
+    plt.ylabel('t')
+    plt.title('Relative Error Heatmap')
+    plt.grid(True)
+    plt.savefig(os.path.join(folder, name), dpi=300, bbox_inches='tight')
+    plt.close()
+
+
+# 为每个点找到最近的时间步
+def find_nearest_timestep(current_points, all_points):
+    """
+    为每个点找到相同空间位置但时间更早的最近点。
+    current_points: Tensor[N, 2], 每行为 (x, t)
+    all_points: Tensor[M, 2], 每行为 (x, t)
+    返回:
+        nearest_points: List[Tensor or None]
+        time_differences: List[float or None]
+    """
+    nearest_points = []
+    time_differences = []
+
+    for i, point in enumerate(current_points):
+        x, t = point[0], point[1]
+
+        # 找到相同 x 的所有点（允许浮点误差）
+        same_x_points = all_points[torch.abs(all_points[:, 0] - x) < 1e-5]
+
+        # 仅保留时间更早的点
+        earlier_points = same_x_points[same_x_points[:, 1] < t]
+
+        if earlier_points.size(0) > 0:
+            # 计算时间差并选择最小的
+            diffs = t - earlier_points[:, 1]
+            min_idx = torch.argmin(diffs)
+            nearest_point = earlier_points[min_idx]
+            time_diff = diffs[min_idx].item()
+
+            nearest_points.append(nearest_point)
+            time_differences.append(time_diff)
+        else:
+            nearest_points.append(None)
+            time_differences.append(None)
+
+    return nearest_points, time_differences
+
+
+######################## FI-PINNs 自适应采样 ########################
+def sais_algorithm(model, domain_ranges, epsilon_r, epsilon_p, N1, p0, N2, max_iter, max_new_points):
+    """
+    Self-Adaptive Importance Sampling (SAIS) for FI-PINNs
+    返回: 失败概率估计, 新采样点
+    """
+    # 定义域范围
+    x_min, x_max = domain_ranges[0]
+    t_min, t_max = domain_ranges[1]
+    domain_volume = (x_max - x_min) * (t_max - t_min)
+
+    # 初始化: 先验分布为均匀分布
+    prior_dist = lambda size: torch.stack([
+        torch.rand(size, device=device) * (x_max - x_min) + x_min,
+        torch.rand(size, device=device) * (t_max - t_min) + t_min
+    ], dim=1).requires_grad_(True)
+
+    # 初始建议分布 (均匀分布)
+    proposal_mean = torch.tensor([(x_min + x_max) / 2, (t_min + t_max) / 2], device=device)
+    proposal_cov = torch.eye(2, device=device) * torch.tensor([(x_max - x_min) ** 2 / 12, (t_max - t_min) ** 2 / 12],
+                                                              device=device)
+
+    # SAIS迭代
+    for k in range(max_iter):
+        # 从当前建议分布采样
+        samples = prior_dist(N1)
+
+        # 计算残差
+        # with torch.no_grad():
+        u_pred = model(samples)[:, 0:1]
+        g_pred = model(samples)[:, 1:2]
+        residuals = torch.abs(Operator(u_pred, g_pred, samples, domain='domain_1'))
+        g_values = residuals - epsilon_r
+
+        # 按残差降序排序
+        sorted_indices = torch.argsort(residuals.squeeze(), descending=True)
+        sorted_samples = samples[sorted_indices]
+        sorted_residuals = residuals[sorted_indices]
+        sorted_g = g_values[sorted_indices]
+
+        # 计算失败点数量
+        N_eta = torch.sum(sorted_g > 0).item()
+        N_p = int(p0 * N1)
+
+        # 检查是否满足停止条件
+        if N_eta >= N_p:
+            break
+
+        # 更新建议分布 (使用前N_p个点)
+        top_samples = sorted_samples[:N_p]
+        proposal_mean = torch.mean(top_samples, dim=0)
+        proposal_cov = torch.cov(top_samples.T)
+
+        # 确保协方差矩阵正定
+        if torch.any(torch.isnan(proposal_cov)) or torch.any(torch.isinf(proposal_cov)):
+            proposal_cov = torch.eye(2, device=device) * 1e-4
+
+    # 最终建议分布
+    final_proposal_mean = proposal_mean
+    final_proposal_cov = proposal_cov
+
+    # 从最终建议分布采样
+    final_samples = prior_dist(N2)
+
+    # 计算残差和失败指标
+    # with torch.no_grad():
+    u_pred_final = model(final_samples)[:, 0:1]
+    g_pred_final = model(final_samples)[:, 1:2]
+    residuals_final = torch.abs(Operator(u_pred_final, g_pred_final, final_samples, domain='domain_1'))
+    g_values_final = residuals_final - epsilon_r
+    failure_indicator = (g_values_final > 0).float()
+
+    # 估计失败概率
+    failure_prob = torch.mean(failure_indicator).item()
+
+    # 选择新点: 残差最大的前 max_new_points 个点
+    _, top_indices = torch.topk(residuals_final.squeeze(), min(max_new_points, N2))
+    new_points = final_samples[top_indices].detach().clone()
+
+    return failure_prob, new_points, final_proposal_mean, final_proposal_cov
+
+
+############################### 训练函数 #####################################
+def train(model_1):
+    # 初始化
+    use_adam = False  # True 使用 Adam，False 使用 LBFGS
+    if use_adam:
+        optimizer = torch.optim.Adam(model_1.parameters(), lr=1e-3)
+    else:
+        optimizer = torch.optim.LBFGS(
+            model_1.parameters(),
+            lr=1.0,
+            max_iter=20,
+            history_size=100,
+            line_search_fn="strong_wolfe"
+        )
+
+    # 生成数据
+    x_train_1, x_b_1, x_ini = grow_data(args.ranges, method='random', domain='domain_1')
+    x_test_1, _, _ = grow_data(args.ranges, method='mesh', domain='domain_1')
+
+    # 存储原始训练点，避免修改原始点
+    original_x_train_1 = x_train_1.detach().clone()
+    current_x_train_1 = original_x_train_1.clone().requires_grad_(True)
+
+    # 存储所有训练点（用于查找最近时间步）
+    all_train_points = [current_x_train_1.detach().clone()]
+
+    # 准备参考解
+    x_ref = np.linspace(args.ranges[0][0], args.ranges[0][1], args.number[1])
+    t_eval = np.linspace(args.ranges[1][0], args.ranges[1][1], args.number[1])
+    dx = x_ref[1] - x_ref[0]
+
+    # 初始条件（排除边界）
+    u0_flat = np.cos(np.pi * x_ref[1:-1] / 2)
+
+    def ode_rhs(t, u_flat):
+        # 重建完整解向量，包括边界点
+        u = np.zeros_like(x_ref)
+        u[1:-1] = u_flat  # 内部点
+
+        # 边界条件: u[0] = 0, u[-1] = 0
+        # 二阶导数边界条件: u_xx[0] = 0, u_xx[-1] = 0
+
+        # 使用中心差分计算四阶导数
+        u_xxxx = np.zeros_like(u)
+
+        # 内部点的标准中心差分
+        for i in range(2, len(u) - 2):
+            u_xxxx[i] = (u[i + 2] - 4 * u[i + 1] + 6 * u[i] - 4 * u[i - 1] + u[i - 2]) / dx ** 4
+
+        # 处理边界附近的点（使用虚拟点）
+        # 左边界附近 (i=1)
+        # 使用虚拟点 u[-1] = -u[1] 来满足 u_xx[0] = 0
+        u_xxxx[1] = (u[3] - 4 * u[2] + 6 * u[1] - 4 * u[0] + (-u[1])) / dx ** 4
+
+        # 右边界附近 (i=len(u)-2)
+        # 使用虚拟点 u[len(u)] = -u[len(u)-2] 来满足 u_xx[-1] = 0
+        u_xxxx[len(u) - 2] = ((-u[len(u) - 2]) - 4 * u[len(u) - 1] + 6 * u[len(u) - 2] - 4 * u[len(u) - 3] + u[
+            len(u) - 4]) / dx ** 4
+
+        # 计算右端项
+        du_dt = -u_xxxx + np.exp(u)
+
+        # 只返回内部点的导数
+        return du_dt[1:-1]
+
+    # 初始条件（内部点）
+    u0_flat = np.zeros(len(x_ref) - 2)  # 确保长度匹配
+
+    # 求解ODE
+    sol = solve_ivp(ode_rhs, [0, args.ranges[1][1]], u0_flat, t_eval=t_eval, method='Radau')
+
+    # 重构参考解
+    u_ref = np.zeros((len(x_ref), len(t_eval)))
+    # u_ref[1:-1, :] = sol.y
+
+    # 存储变量
+    Loss_1 = []
+    L2_errors = []
+    failure_probs = []  # 存储失败概率
+    start_time = time.time()
+
+    # 训练循环
+    for epoch in range(args.e):
+        def closure():
+            optimizer.zero_grad()
+
+            # 使用当前训练点
+            u_1 = model_1(current_x_train_1)[:, 0:1]
+            gu_1 = model_1(current_x_train_1)[:, 1:2]
+            lap_1 = Operator(u_1, gu_1, current_x_train_1, domain='domain_1')
+            source_1 = source_fun_1(current_x_train_1)
+            residuals = lap_1 - source_1
+            if args.use_weight == 1:
+                pde_loss_1 = group_time_weight_loss(current_x_train_1, residuals, p=args.weight_p)
+            else:
+                pde_loss_1 = torch.mean(residuals ** 2)
+
+            # 边界损失
+            bc_pred = model_1(x_b_1)[:, 1:2]
+            bc_loss_1 = torch.mean((bc_pred - 1) ** 2)  # bd_fun always returns 1
+
+            # 计算二阶导数边界条件
+            bc_pred_u = model_1(x_b_1)[:, 0:1]
+            bc_pred_u_x = grad(bc_pred_u, x_b_1)[:, 0:1]  # 修正：使用 x_b_lower
+            bc_pred_u_xx = grad(bc_pred_u_x, x_b_1)[:, 0:1]  # 修正：使用 x_b_lower
+
+            bc_loss_u_xx = torch.mean((bc_pred_u_xx - 0) ** 2)
+
+            # 初始条件损失
+            u_ini_pred = model_1(x_ini)[:, 1:2]
+            ext_ini = initial_fun(x_ini)
+            loss_ini = torch.mean((u_ini_pred - ext_ini) ** 2)
+
+            # 耦合项损失
+            loss_g = torch.mean((gu_1 - torch.exp(-u_1)) ** 2)
+
+            # 时间离散损失 - 新添加的项
+            loss_time = torch.tensor(0.0, device=device)
+            if args.use_time_loss and epoch > 10:  # 前10个epoch不添加，让模型先初步收敛
+                # 查找每个点的最近时间步
+                nearest_points, time_diffs = find_nearest_timestep(current_x_train_1, current_x_train_1)
+
+                valid_points = []
+                for i, (point, nearest, h) in enumerate(zip(current_x_train_1, nearest_points, time_diffs)):
+                    if nearest is not None and h is not None and h > 1e-6:
+                        # 计算当前点的值
+                        u_current = u_1[i]
+                        gu_current = gu_1[i]
+
+                        # 计算当前点的拉普拉斯算子
+                        u_x = grad(u_current, current_x_train_1)[i, 0:1]
+                        u_xx = grad(u_x, current_x_train_1)[i, 0:1]
+
+                        # 计算最近点的值
+                        nearest_output = model_1(nearest.unsqueeze(0))
+                        gu_nearest = nearest_output[:, 1:2]
+
+                        # 计算时间离散约束
+                        F_u = torch.exp(u_current)  # 根据方程定义 F(u) = exp(u)
+                        constraint = gu_current - gu_nearest + delta * h + (h * u_xx) / F_u
+
+                        # 添加到损失
+                        loss_time += torch.mean(constraint ** 2)
+                        valid_points.append(1)
+
+                if valid_points:
+                    loss_time = loss_time / len(valid_points)
+                else:
+                    loss_time = torch.tensor(0.0, device=device)
+
+            # 组合损失
+            loss = args.w_pde * pde_loss_1 + args.w_bc * (
+                        bc_loss_1 + bc_loss_u_xx) + args.w_g * loss_g + args.w_ini * loss_ini + args.w_time * loss_time
+            loss.backward(retain_graph=True)
+            return loss
+
+        optimizer.step(closure)
+
+        # FI-PINNs自适应采样
+        if args.use_fi and epoch % args.fi_interval == 0 and epoch > 0:
+            failure_prob, new_points, proposal_mean, proposal_cov = sais_algorithm(
+                model_1,
+                args.ranges,
+                args.epsilon_r,
+                args.epsilon_p,
+                args.sais_N1,
+                args.sais_p0,
+                args.sais_N2,
+                args.sais_max_iter,
+                args.max_new_points
+            )
+
+            failure_probs.append(failure_prob)
+            print(f"Epoch {epoch}: Failure probability = {failure_prob:.4f}")
+
+            # 如果失败概率大于阈值，添加新点
+            if failure_prob > args.epsilon_p and len(new_points) > 0:
+                # 创建新的训练点集合（包含原始点和新点）
+                updated_train_points = torch.cat([
+                    current_x_train_1.detach().clone(),
+                    new_points.requires_grad_(True)
+                ], dim=0).requires_grad_(True)
+
+                # 更新当前训练点
+                current_x_train_1 = updated_train_points
+                all_train_points.append(updated_train_points.detach().clone())
+                print(f"Epoch {epoch}: Added {len(new_points)} new points, total points: {len(current_x_train_1)}")
+
+        # 每10个epoch记录一次
+        if epoch % 100 == 0:
+            # 计算当前解的L2误差
+            _, uu_t, solution_on_grid = generate_solution_on_grid(
+                model_1, x_test_1, (args.number[1], args.number[1]))
+
+            # 创建内部点掩码（排除边界）
+            inner_mask = (x_ref > args.ranges[0][0] + 1e-6) & (x_ref < args.ranges[0][1] - 1e-6)
+
+            # 计算相对L2误差
+            if np.linalg.norm(u_ref[inner_mask, :].T) > 1e-8:
+                error = solution_on_grid[:, inner_mask] - u_ref[inner_mask, :].T
+                rel_l2_error = np.linalg.norm(error) / np.linalg.norm(u_ref[inner_mask, :].T)
+            else:
+                rel_l2_error = np.nan
+            L2_errors.append(rel_l2_error)
+
+            # 记录时间
+            t = time.time() - start_time
+            start_time = time.time()
+
+            print(f"Epoch:{epoch}, Time: {t:.2f}s, L2 Error: {rel_l2_error:.4e}")
+
+            # 保存损失和误差数据
+            folder = f'./results/{filename}'
+            os.makedirs(folder, exist_ok=True)
+            np.save(os.path.join(folder, 'Loss.npy'), Loss_1)
+            np.save(os.path.join(folder, 'L2_errors.npy'), L2_errors)
+            if args.use_fi:
+                np.save(os.path.join(folder, 'failure_probs.npy'), failure_probs)
+
+            # 绘制损失曲线
+            plt.figure(figsize=(10, 6))
+            plt.plot(Loss_1)
+            plt.yscale('log')
+            plt.title('Training Loss')
+            plt.xlabel('Epochs')
+            plt.ylabel('Loss')
+            plt.grid(True)
+            plt.savefig(os.path.join(folder, 'loss_curve.pdf'), dpi=300, bbox_inches='tight')
+            plt.close()
+
+            # 绘制全局相对误差下降曲线
+            plt.figure(figsize=(10, 6))
+            # 修改这里：创建与L2_errors相同长度的epochs数组
+            epochs = np.arange(0, len(L2_errors)) * 10  # 每个点代表10个epoch
+            plt.semilogy(epochs, L2_errors)
+            plt.title('Global Relative L2 Error')
+            plt.xlabel('Epochs')
+            plt.ylabel('Relative Error')
+            plt.grid(True, which="both", ls="--")
+            plt.savefig(os.path.join(folder, 'global_error_curve.pdf'), dpi=300, bbox_inches='tight')
+            plt.close()
+
+            # 绘制失败概率曲线
+            if args.use_fi and len(failure_probs) > 0:
+                plt.figure(figsize=(10, 6))
+                fi_epochs = np.arange(1, len(failure_probs) + 1) * args.fi_interval
+                plt.semilogy(fi_epochs, failure_probs, 'o-')
+                plt.axhline(y=args.epsilon_p, color='r', linestyle='--', label='Threshold')
+                plt.title('Failure Probability')
+                plt.xlabel('Epochs')
+                plt.ylabel('Probability')
+                plt.legend()
+                plt.grid(True, which="both", ls="--")
+                plt.savefig(os.path.join(folder, 'failure_prob_curve.pdf'), dpi=300, bbox_inches='tight')
+                plt.close()
+
+            # 生成最终解
+            x_vals = np.linspace(args.ranges[0][0], args.ranges[0][1], args.number[1])
+            y_vals = np.linspace(args.ranges[1][0], args.ranges[1][1], args.number[1])
+
+            # 模型预测
+            _, _, solution_on_grid = generate_solution_on_grid(
+                model_1, x_test_1, (args.number[1], args.number[1]))
+
+            # 参考解
+            ref_solution = u_ref.T
+
+            # 误差
+            abs_error = np.abs(solution_on_grid - ref_solution)
+
+            # 相对误差（排除边界和初值）
+            inner_mask = (x_ref > args.ranges[0][0] + 1e-6) & (x_ref < args.ranges[0][1] - 1e-6)
+            time_mask = np.ones(solution_on_grid.shape[0], dtype=bool)
+            time_mask[0] = False  # 排除初值（第一个时间步）
+
+            rel_error = np.zeros_like(abs_error)
+
+            # 创建二维掩码，结合空间和时间的排除条件
+            mask_2d = np.outer(time_mask, inner_mask)
+
+            # 避免除以零
+            ref_abs = np.abs(ref_solution[mask_2d]) + 1e-8
+            rel_error[mask_2d] = abs_error[mask_2d] / ref_abs
+
+            # 终止时刻的相对误差计算（L2范数）
+            final_time_index = -1  # 最后一个时间步
+            # final_time = y_vals[final_time_index]
+
+            # 提取终止时刻的预测解和参考解（排除边界点）
+            final_pred = solution_on_grid[final_time_index, inner_mask]  # 模型预测解
+            final_ref = ref_solution[final_time_index, inner_mask]  # 参考解
+
+            # 计算相对误差的L2范数
+            error = final_pred - final_ref
+            # l2_error = np.linalg.norm(error) / np.linalg.norm(final_ref)
+            # print(f"final_time_l2: {l2_error:.4e}")  # 输出示例: final_time_l2: 1.2345e-03
+
+            # 可视化
+            plot_heatmap(solution_on_grid, x_vals, y_vals, 'solution.pdf', 'Model Solution')
+            plot_heatmap(uu_t, x_vals, y_vals, 'solution_t.pdf', 'Model Solution_t')
+            plot_heatmap(ref_solution, x_vals, y_vals, 'reference.pdf', 'Reference Solution')
+            plot_heatmap(abs_error, x_vals, y_vals, 'absolute_error.pdf', 'Absolute Error', vmin=0)
+            plot_relative_error(rel_error, x_vals, y_vals, 'relative_error.pdf')
+
+            # 终止时刻的相对误差可视化
+            final_time_index = -1  # 最后一个时间步
+            final_time = y_vals[final_time_index]
+            final_rel_error = rel_error[final_time_index, :]
+
+            plt.figure(figsize=(10, 6))
+            plt.plot(x_vals, final_rel_error)
+            plt.title(f'Relative Error at Final Time (t={final_time:.4f})')
+            plt.xlabel('x')
+            plt.ylabel('Relative Error')
+            plt.yscale('log')
+            plt.grid(True, which="both", ls="--")
+            plt.savefig(os.path.join(folder, f'final_time_error_{final_time:.4f}.pdf'), dpi=300,
+                        bbox_inches='tight')
+            plt.close()
+
+            # 保存终止时刻的相对误差数据
+            final_error_data = np.column_stack((x_vals, final_rel_error))
+            np.savetxt(os.path.join(folder, f'final_time_error_{final_time:.4f}.txt'), final_error_data,
+                       header='x, relative_error', comments='')
+
+    # 训练结束后保存最终模型
+    torch.save(model_1.state_dict(), f'./checkpoints/{filename}_final_model.pth')
+
+    return model_1
+
+
+######################## 爆破时间预测函数 ########################
+def predict_blowup_time(model, initial_time_range, blowup_threshold=100.0, max_iter=10, tol=1e-3):
+    """
+    预测爆破时间的迭代算法
+
+    参数:
+    - model: 初始化的BPINN模型
+    - initial_time_range: 初始时间范围 [t_min, t_max]
+    - blowup_threshold: 判断爆破发生的导数阈值
+    - max_iter: 最大迭代次数
+    - tol: 收敛容差
+
+    返回:
+    - predicted_blowup_time: 预测的爆破时间
+    - history: 迭代历史记录
+    """
+    history = []
+    current_time_range = initial_time_range.copy()
+
+    for iter in range(max_iter):
+        print(f"Iteration {iter + 1}/{max_iter}, time range: {current_time_range}")
+
+        # 1. 在当前时间范围内训练模型
+        args.ranges[1] = current_time_range  # 更新全局时间范围
+        trained_model = train(model)  # 训练模型
+
+        # 2. 生成测试网格点
+        x_test, _, _ = grow_data(args.ranges, method='mesh', domain='domain_1')
+
+        # 3. 计算u对时间的导数
+        x_test.requires_grad_(True)
+        g_pred = trained_model(x_test)[:, 1:2]
+        u_pred = -torch.log(torch.abs(g_pred))
+        u_t = grad(u_pred, x_test)[:, 1:2]
+        print(torch.max(u_t))
+        print(torch.max(torch.abs(u_t)))# ∂u/∂t
+        print(torch.min(u_t))
+
+        # 4. 检测爆破点
+        blowup_mask = (torch.abs(u_t) > initial_time_range[1]/args.ranges[1][1] *blowup_threshold).squeeze()
+        # blowup_mask = (torch.abs(u_t) > blowup_threshold).squeeze()
+        blowup_points = x_test[blowup_mask]
+        print(len(blowup_points))
+
+        if len(blowup_points) > 0:
+            # 找到最早的爆破时间点
+            t_blowup = torch.min(blowup_points[:, 1:2]).item()
+            print(f"Found blowup at t = {t_blowup}")
+
+            # 记录当前迭代结果
+            history.append({
+                'iteration': iter + 1,
+                'time_range': current_time_range.copy(),
+                'blowup_time': t_blowup,
+                'num_blowup_points': len(blowup_points)
+            })
+
+            # 检查收敛条件
+            # if abs(current_time_range[1] - t_blowup) < tol:
+            #     print(f"Converged after {iter + 1} iterations")
+            #     return t_blowup, history
+
+            # 更新时间范围
+            current_time_range[1] = t_blowup
+        else:
+            print("No blowup detected in current time range")
+            history.append({
+                'iteration': iter + 1,
+                'time_range': current_time_range.copy(),
+                'blowup_time': None,
+                'num_blowup_points': 0
+            })
+            # 如果没有检测到爆破，返回当前时间范围的上限
+            return current_time_range[1], history
+
+    print(f"Reached maximum iterations ({max_iter})")
+    return current_time_range[1], history
+
+
+############################### 主程序 #####################################
+if __name__ == "__main__":
+    # 确保模型目录存在
+    model_dir = './checkpoints'
+    os.makedirs(model_dir, exist_ok=True)
+
+    model_1 = Net().to(device)
+
+    # 爆破时间预测
+    if args.predict_blowup==1:
+        # 设置初始时间范围
+        initial_time_range = [0, 2.0]  # 初始猜测的时间范围
+
+        # 预测爆破时间
+        blowup_time, history = predict_blowup_time(
+            model_1,
+            initial_time_range,
+            blowup_threshold=args.blowup_threshold,
+            max_iter=args.max_blowup_iter,
+            tol=args.blowup_tol
+        )
+
+        print(f"Predicted blowup time: {blowup_time}")
+
+        # 保存结果
+        results_dir = f'./results/{filename}'
+        os.makedirs(results_dir, exist_ok=True)
+
+        # 保存迭代历史
+        with open(os.path.join(results_dir, 'blowup_prediction_history.txt'), 'w') as f:
+            for entry in history:
+                f.write(f"Iteration {entry['iteration']}: ")
+                f.write(f"Time range {entry['time_range']}, ")
+                if entry['blowup_time'] is not None:
+                    f.write(f"Blowup detected at t = {entry['blowup_time']}, ")
+                    f.write(f"Number of blowup points: {entry['num_blowup_points']}\n")
+                else:
+                    f.write("No blowup detected\n")
+
+        # 绘制爆破时间迭代过程
+        plt.figure(figsize=(10, 6))
+        iterations = [h['iteration'] for h in history]
+        blowup_times = [h['blowup_time'] for h in history if h['blowup_time'] is not None]
+
+        if blowup_times:
+            plt.plot(iterations[:len(blowup_times)], blowup_times, 'o-')
+            plt.xlabel('Iteration')
+            plt.ylabel('Predicted Blowup Time')
+            plt.title('Blowup Time Prediction Convergence')
+            plt.grid(True)
+            plt.savefig(os.path.join(results_dir, 'blowup_convergence.pdf'),
+                        dpi=300, bbox_inches='tight')
+            plt.close()
+    else:
+        # 正常训练模式
+        train(model_1)
