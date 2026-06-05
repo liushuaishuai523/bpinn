@@ -92,6 +92,14 @@ Common arguments:
 
 Do not commit generated folders such as `results/`, `checkpoints/`, `model/`, `*_result*/`, `figure/`, or `compare_data/`. Re-run the scripts to regenerate results locally. If trained models or selected final figures need to be shared, place them in GitHub Releases or an external data repository and link them here.
 
+## Citation
+
+If you use this repository, cite the archived release DOI after the GitHub release has been deposited on Zenodo. Before a DOI is available, cite the GitHub repository and the exact commit or release tag used.
+
+```text
+Liu, S. BPINN Blow-Up PDE Experiments. GitHub, https://github.com/liushuaishuai523/bpinn.
+```
+
 ## License
 
 No license has been selected yet. Add a `LICENSE` file before making the repository public if others should be allowed to reuse the code.

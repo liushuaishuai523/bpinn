@@ -1,0 +1,26 @@
+{
+  "title": "BPINN Blow-Up PDE Experiments",
+  "upload_type": "software",
+  "publication_date": "2026-06-05",
+  "creators": [
+    {
+      "name": "Liu, Shuaishuai"
+    }
+  ],
+  "description": "Experiment scripts for BPINN and related PINN variants on PDEs with blow-up behavior.",
+  "keywords": [
+    "BPINN",
+    "PINN",
+    "blow-up",
+    "partial differential equations",
+    "physics-informed neural networks"
+  ],
+  "access_right": "open",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/liushuaishuai523/bpinn",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}
