@@ -1,0 +1,76 @@
+{
+  "profile": "paper",
+  "seed": 20260620,
+  "g_strategy": "strict_positive_decay_with_log_coupling",
+  "fourth_order_reference_time": 0.96508,
+  "metrics": [
+    {
+      "problem": "fk",
+      "global_relative_error": 0.023022550589599785,
+      "terminal_relative_error": 0.10974746050330271,
+      "paper_global_error": 0.0448,
+      "paper_terminal_error": 0.1179,
+      "no_worse_global": true,
+      "no_worse_terminal": true,
+      "losses": {
+        "total": 2.0718045723272655e-05,
+        "pde": 1.7244515014444614e-05,
+        "geometric": 3.4735307088280433e-07,
+        "initial": 0.0,
+        "boundary": 0.0,
+        "navier": 0.0
+      }
+    },
+    {
+      "problem": "cubic",
+      "global_relative_error": 0.06798784842136871,
+      "terminal_relative_error": 0.17227364924005384,
+      "paper_global_error": 0.0855,
+      "paper_terminal_error": 0.1861,
+      "no_worse_global": true,
+      "no_worse_terminal": true,
+      "losses": {
+        "total": 0.0002205502248590251,
+        "pde": 0.00016341307501332428,
+        "geometric": 5.713714984570083e-06,
+        "initial": 0.0,
+        "boundary": 0.0,
+        "navier": 0.0
+      }
+    },
+    {
+      "problem": "fourth",
+      "global_relative_error": 0.025021147889712,
+      "terminal_relative_error": 0.06965079842042671,
+      "paper_global_error": 0.0704,
+      "paper_terminal_error": 0.1377,
+      "no_worse_global": true,
+      "no_worse_terminal": true,
+      "losses": {
+        "total": 3.403026094676223e-05,
+        "pde": 2.976467320175208e-05,
+        "geometric": 2.9131364603083043e-07,
+        "initial": 0.0,
+        "boundary": 0.0,
+        "navier": 1.3524512847018474e-07
+      }
+    },
+    {
+      "problem": "convection",
+      "global_relative_error": 0.018244063711572275,
+      "terminal_relative_error": 0.08817902532100168,
+      "paper_global_error": 0.02825,
+      "paper_terminal_error": 0.09587,
+      "no_worse_global": true,
+      "no_worse_terminal": true,
+      "losses": {
+        "total": 5.66658226799952e-06,
+        "pde": 4.921897294481438e-06,
+        "geometric": 7.446849735180824e-08,
+        "initial": 0.0,
+        "boundary": 0.0,
+        "navier": 0.0
+      }
+    }
+  ]
+}

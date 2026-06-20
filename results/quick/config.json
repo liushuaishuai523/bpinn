@@ -1,0 +1,45 @@
+{
+  "domain_length": 5.0,
+  "terminal_times": [
+    1.2,
+    1.5,
+    1.8
+  ],
+  "gammas": [
+    50.0,
+    100.0,
+    200.0,
+    400.0,
+    800.0
+  ],
+  "seeds": [
+    20260620
+  ],
+  "max_refinements": 18,
+  "refinement_tolerance": 0.0025,
+  "detection_time_points": 500,
+  "detection_space_points": 81,
+  "minimum_positive_g": 1e-10,
+  "stable_tail_size": 3,
+  "stable_tail_tolerance": 0.015,
+  "max_terminal_dispersion": 0.02,
+  "max_component_loss": 0.01,
+  "quadratic_disagreement_tolerance": 0.008,
+  "output_dir": "results/quick",
+  "training": {
+    "width": 32,
+    "hidden_layers": 3,
+    "n_interior": 160,
+    "n_boundary": 40,
+    "adam_steps": 350,
+    "adam_lr": 0.002,
+    "lbfgs_steps": 100,
+    "lbfgs_lr": 0.8,
+    "weight_pde": 1.0,
+    "weight_geo": 10.0,
+    "weight_navier": 1.0,
+    "end_time_sampling_power": 2.0,
+    "grad_clip": 100.0,
+    "dtype": "float64"
+  }
+}

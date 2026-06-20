@@ -1,0 +1,5 @@
+problem,global_relative_error,terminal_relative_error,paper_global_error,paper_terminal_error,no_worse_global,no_worse_terminal
+fk,0.023022550589599785,0.10974746050330271,0.0448,0.1179,True,True
+cubic,0.06798784842136871,0.17227364924005384,0.0855,0.1861,True,True
+fourth,0.025021147889712,0.06965079842042671,0.0704,0.1377,True,True
+convection,0.018244063711572275,0.08817902532100168,0.02825,0.09587,True,True

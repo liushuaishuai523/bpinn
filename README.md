@@ -1,105 +1,168 @@
-# BPINN Blow-Up PDE Experiments
+# BPINN and ATR-BPINN
 
-This repository contains compact experiment scripts for physics-informed neural network methods on PDEs with blow-up behavior. Directory names describe the PDE example being solved, and script names describe the method family used in that example.
+Reproducible PyTorch implementation of the Blow-up Physics-Informed Neural Network (BPINN) and Adaptive Time Refinement BPINN (ATR-BPINN) experiments. The repository contains four fixed-domain BPINN examples, fourth-order ATR-BPINN prediction, reference solvers, manuscript figure generation, saved
+checkpoints, and machine-readable result files.
 
-Generated results, checkpoints, figures, IDE files, and cache files are ignored by `.gitignore`.
+## Features
 
-## Project Structure
+- Four blow-up PDE examples implemented through a shared BPINN interface.
+- Strictly positive transformed variable with log-scale geometric coupling.
+- Exact initial and Dirichlet constraints.
+- Navier boundary enforcement for the fourth-order equation.
+- Characteristic-coordinate input for the convection-diffusion equation.
+- Fixed-threshold ATR-BPINN with linear and quadratic $1/\gamma$ diagnostics.
+- Reproducible seeds, JSON/CSV outputs, PDF figures, tests, and GitHub Actions.
 
-| Path | Example |
-| --- | --- |
-| `semilinear_parabolic_example_4_1/` | Semi-linear parabolic Example 4.1 with blow-up time near `0.1664`. |
-| `semilinear_parabolic_example_2/` | Semi-linear parabolic Example 2 with blow-up time near `0.026543`. |
-| `convection_diffusion_example_6_4/` | Convection-diffusion blow-up Example 6.4 with blow-up time near `0.16665`. |
-| `fourth_order_blowup/` | Fourth-order blow-up equation with blow-up time near `0.9598`. |
-
-## Environment
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-```
-
-For GPU training, install the PyTorch build that matches your CUDA version before running long experiments.
-
-## Running Experiments
-
-Run each script from its own example folder because outputs are written with relative paths:
-
-```bash
-cd semilinear_parabolic_example_4_1
-python bpinn_fi_bpinn.py --filename demo_bpinn --use_fi 0
-```
-
-Each script writes generated artifacts to:
-
-| Path | Content |
-| --- | --- |
-| `results/{filename}/` | Loss curves, error curves, solution plots, and NumPy data. |
-| `checkpoints/{filename}_final_model.pth` | Final trained model weights. |
-
-Common arguments:
-
-| Argument | Meaning |
-| --- | --- |
-| `--e` | Number of training epochs. |
-| `--number` | Sampling counts. |
-| `--ranges` | Spatial and temporal domain ranges. |
-| `--filename` | Output folder and checkpoint filename prefix. |
-| `--use_fi` | Enable failure-informed adaptive sampling. |
-| `--use_apinn` | Enable adaptive loss weighting, where available. |
-| `--use_time_loss` | Enable additional time-grouped loss, where available. |
-
-## Script Index
-
-### Semi-Linear Parabolic Example 4.1
-
-| Script | Purpose |
-| --- | --- |
-| `semilinear_parabolic_example_4_1/bpinn_fi_bpinn.py` | BPINN and FI-BPINN experiments. |
-| `semilinear_parabolic_example_4_1/adaptive_bpinn.py` | A-BPINN experiment with adaptive weighting options. |
-| `semilinear_parabolic_example_4_1/pinn_fi_pinn_apinn.py` | PINN, FI-PINN, and A-PINN experiments. |
-
-### Semi-Linear Parabolic Example 2
-
-| Script | Purpose |
-| --- | --- |
-| `semilinear_parabolic_example_2/bpinn_fi_bpinn.py` | BPINN and FI-BPINN experiments. |
-| `semilinear_parabolic_example_2/adaptive_bpinn.py` | A-BPINN experiment. |
-| `semilinear_parabolic_example_2/pinn_fi_pinn_apinn.py` | PINN, FI-PINN, and A-PINN experiments. |
-
-### Convection-Diffusion Example 6.4
-
-| Script | Purpose |
-| --- | --- |
-| `convection_diffusion_example_6_4/bpinn_fi_bpinn.py` | BPINN and FI-BPINN experiments. |
-| `convection_diffusion_example_6_4/adaptive_bpinn.py` | A-BPINN experiment. |
-| `convection_diffusion_example_6_4/pinn_fi_pinn_apinn.py` | PINN, FI-PINN, and A-PINN experiments. |
-| `convection_diffusion_example_6_4/atr_bpinn_blowup_time.py` | ATR-BPINN blow-up time prediction. |
-
-### Fourth-Order Blow-Up Equation
-
-| Script | Purpose |
-| --- | --- |
-| `fourth_order_blowup/bpinn_fi_bpinn.py` | BPINN and FI-BPINN experiments. |
-| `fourth_order_blowup/adaptive_bpinn.py` | A-BPINN experiment. |
-| `fourth_order_blowup/pinn_fi_pinn_apinn.py` | PINN, FI-PINN, and A-PINN experiments. |
-| `fourth_order_blowup/atr_bpinn_blowup_time.py` | ATR-BPINN blow-up time prediction. |
-| `fourth_order_blowup/plot_3d_fi_bpinn.py` | 3D visualization variant for fourth-order results. |
-
-## Data and Checkpoints
-
-Do not commit generated folders such as `results/`, `checkpoints/`, `model/`, `*_result*/`, `figure/`, or `compare_data/`. Re-run the scripts to regenerate results locally. If trained models or selected final figures need to be shared, place them in GitHub Releases or an external data repository and link them here.
-
-## Citation
-
-If you use this repository, cite the archived release DOI after the GitHub release has been deposited on Zenodo. Before a DOI is available, cite the GitHub repository and the exact commit or release tag used.
+## Repository Layout
 
 ```text
-Liu, S. BPINN Blow-Up PDE Experiments. GitHub, https://github.com/liushuaishuai523/bpinn.
+.
+├── run_bpinn_examples.py          # Run the four fixed-domain BPINN examples
+├── run_experiment.py              # Run fourth-order ATR-BPINN
+├── generate_manuscript_figures.py # Export manuscript-ready PDF figures
+├── src/atr_bpinn/                 # Models, problems, training, and analysis
+├── tests/                         # Unit tests
+├── results/bpinn/                 # BPINN metrics, figures, and checkpoints
+├── results/quick/                 # Verified ATR-BPINN threshold matrix
+├── requirements.txt
+└── pyproject.toml
 ```
 
-## License
+## Requirements
 
-No license has been selected yet. Add a `LICENSE` file before making the repository public if others should be allowed to reuse the code.
+- Python 3.10 or newer
+- PyTorch 2.2 or newer
+- NumPy, SciPy, and Matplotlib
+
+Double precision is used for the fourth derivatives. With `--device auto`,
+CUDA is selected when available; otherwise the experiments run on CPU.
+
+## Installation
+
+```bash
+git clone https://github.com/liushuaishuai523/bpinn.git
+cd bpinn
+
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e ".[dev]"
+```
+
+On Windows, activate the environment with:
+
+```powershell
+.venv\Scripts\activate
+```
+
+## Run BPINN Examples
+
+Run the FK example with the publication configuration:
+
+```bash
+python run_bpinn_examples.py \
+  --problem fk \
+  --profile paper \
+  --device auto \
+  --output results/bpinn_fk
+```
+
+Run all four examples:
+
+```bash
+python run_bpinn_examples.py \
+  --problem all \
+  --profile paper \
+  --device auto \
+  --output results/bpinn
+```
+
+Available problem names are:
+
+| Name | Equation | Evaluation time |
+|---|---|---:|
+| `fk` | $u_t=u_{xx}+3\exp(u)$ | 0.1663 |
+| `cubic` | $u_t=u_{xx}+5(u+1)^3$ | 0.0264 |
+| `fourth` | $u_t=-u_{xxxx}+\exp(u)$ | 0.9598 |
+| `convection` | $u_t+u_x=u_{xx}+3\exp(u)$ | 0.16664 |
+
+Use `--profile quick` for a short pipeline check. The `paper` profile uses the
+validated network sizes, sample counts, and optimization budgets.
+
+Each run writes the following files to the selected output directory:
+
+- `<problem>_model.pt`: trained PyTorch checkpoint;
+- `<problem>_bpinn.png` and `.pdf`: solution and error figure;
+- `metrics.csv`: global and terminal relative errors;
+- `summary.json`: configuration, losses, and quality-gate results.
+
+## Run ATR-BPINN
+
+Run the verified threshold matrix:
+
+```bash
+python run_experiment.py \
+  --profile quick \
+  --device auto \
+  --output results/atr_quick
+```
+
+Run the publication configuration:
+
+```bash
+python run_experiment.py \
+  --profile paper \
+  --device auto \
+  --output results/atr_paper
+```
+
+Continue an interrupted matrix without repeating converged runs:
+
+```bash
+python run_experiment.py \
+  --profile paper \
+  --device auto \
+  --output results/atr_paper \
+  --resume
+```
+
+ATR-BPINN evaluates the common threshold set
+`{50, 100, 200, 400, 800}` for initial terminal times `{1.2, 1.5, 1.8}`.
+The output directory contains all refinement records, threshold predictions,
+fit diagnostics, the combined estimate, and PNG/PDF figures.
+
+## Generate Manuscript Figures
+
+After running the four BPINN examples with output `results/bpinn`, generate the
+manuscript-ready PDF figures with:
+
+```bash
+python generate_manuscript_figures.py \
+  --results results/bpinn \
+  --atr-results results/quick \
+  --output results/manuscript_figures \
+  --device auto
+```
+
+The exported PDFs use embedded fonts, enlarged labels, and 300 dpi rasterized
+heatmaps.
+
+## Tests
+
+```bash
+python -m pytest -q
+```
+
+## Results
+
+Existing verified outputs are included under `results/bpinn/` and `results/quick/`.
+
+## Reproducibility
+
+- Default random seed: `20260620`.
+- Training and evaluation use `float64` unless explicitly changed.
+- Initial and boundary constraints are embedded in the fixed-domain models.
+- Commands return a nonzero exit code when an accuracy or convergence gate
+  fails.
+- Full configurations can require several minutes on CPU, especially for the
+  fourth-order and convection-diffusion examples.

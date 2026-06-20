@@ -1,34 +1,12 @@
-# Python cache and local environments
 __pycache__/
 *.py[cod]
-*$py.class
+*.egg-info/
 .pytest_cache/
-.mypy_cache/
-.ruff_cache/
 .venv/
-venv/
-env/
-
-# IDE and OS files
-.idea/
-**/.idea/
-.vscode/
 .DS_Store
-
-# Generated experiment outputs
-**/results/
-**/checkpoints/
-**/model/
-**/*result*/
-**/figure/
-**/compare_data/
-*.pth
-*.pt
-*.npy
-*.npz
-*.pdf
-
-# Logs and temporary files
-*.log
-tmp/
-temp/
+results/*
+!results/.gitkeep
+!results/quick/
+!results/quick/**
+!results/bpinn/
+!results/bpinn/**

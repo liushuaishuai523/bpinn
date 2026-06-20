@@ -1,0 +1,46 @@
+{
+  "method": "fixed-threshold ATR-BPINN with 1/gamma extrapolation",
+  "prediction_used_reference_time": false,
+  "device": "cpu",
+  "run_failures": [],
+  "terminal_fits": {
+    "1.2": {
+      "terminal_time": 1.2,
+      "linear_intercept": 0.9629806996554512,
+      "quadratic_intercept": 0.962832741025278,
+      "estimate": 0.9629806996554512,
+      "tail_spread": 0.0018092866655108342,
+      "fit_rmse": 3.4746295315936665e-05,
+      "valid": true,
+      "reasons": []
+    },
+    "1.5": {
+      "terminal_time": 1.5,
+      "linear_intercept": 0.9644740694439061,
+      "quadratic_intercept": 0.9649341725340884,
+      "estimate": 0.9644740694439061,
+      "tail_spread": 0.002805314651133761,
+      "fit_rmse": 0.00048708481114134695,
+      "valid": true,
+      "reasons": []
+    },
+    "1.8": {
+      "terminal_time": 1.8,
+      "linear_intercept": 0.9660825174110612,
+      "quadratic_intercept": 0.9696603528036123,
+      "estimate": 0.9660825174110612,
+      "tail_spread": 0.0024125350929316003,
+      "fit_rmse": 0.0018390601556627776,
+      "valid": true,
+      "reasons": []
+    }
+  },
+  "combined": {
+    "estimate": 0.9645124288368061,
+    "uncertainty": 0.00155126462266183,
+    "valid": true,
+    "reasons": []
+  },
+  "reference_time": 0.96508,
+  "absolute_error": 0.0005675711631939473
+}

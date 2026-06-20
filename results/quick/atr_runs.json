@@ -1,0 +1,1608 @@
+[
+  {
+    "terminal_time": 1.2,
+    "gamma": 50.0,
+    "seed": 20260620,
+    "predicted_time": 0.9479811166613582,
+    "converged": true,
+    "reason": "refinement_converged",
+    "refinements": [
+      {
+        "iteration": 1,
+        "input_horizon": 1.2,
+        "effective_threshold": 50.0,
+        "detected_time": 0.9952471647343275,
+        "max_gradient": 50.79977595472045,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.01838145646065602,
+          "pde": 0.009742208290031296,
+          "geometric": 0.0007955725671217593,
+          "navier": 0.0006835224994071338
+        }
+      },
+      {
+        "iteration": 2,
+        "input_horizon": 0.9952471647343275,
+        "effective_threshold": 60.28653195512139,
+        "detected_time": 0.9689339487997526,
+        "max_gradient": 61.600250384231416,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.008556855851282723,
+          "pde": 0.00499475596467551,
+          "geometric": 0.00034575962482959085,
+          "navier": 0.00010450363831130457
+        }
+      },
+      {
+        "iteration": 3,
+        "input_horizon": 0.9689339487997526,
+        "effective_threshold": 61.92372563096152,
+        "detected_time": 0.9512548455723953,
+        "max_gradient": 62.63503825062839,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0030837325139446885,
+          "pde": 0.0024065965212717393,
+          "geometric": 6.106041645060126e-05,
+          "navier": 6.653182816693674e-05
+        }
+      },
+      {
+        "iteration": 4,
+        "input_horizon": 0.9512548455723953,
+        "effective_threshold": 63.074580149861326,
+        "detected_time": null,
+        "max_gradient": 61.048960907892656,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0008587316504735976,
+          "pde": 0.000519891483251683,
+          "geometric": 2.864162128386676e-05,
+          "navier": 5.242395438324699e-05
+        }
+      },
+      {
+        "iteration": 5,
+        "input_horizon": 0.9600943971860739,
+        "effective_threshold": 62.49385495410981,
+        "detected_time": 0.9482751765632021,
+        "max_gradient": 63.49533927168759,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.00028282848237540416,
+          "pde": 0.00011429659241547885,
+          "geometric": 1.4705957031748831e-05,
+          "navier": 2.1472319642437028e-05
+        }
+      },
+      {
+        "iteration": 6,
+        "input_horizon": 0.9482751765632021,
+        "effective_threshold": 63.27277301242423,
+        "detected_time": null,
+        "max_gradient": 57.52377828865131,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.001334444864124786,
+          "pde": 0.0010832221279268748,
+          "geometric": 2.1400215315170734e-05,
+          "navier": 3.7220583046203954e-05
+        }
+      },
+      {
+        "iteration": 7,
+        "input_horizon": 0.9556746213792346,
+        "effective_threshold": 62.78287469160547,
+        "detected_time": 0.9479811166613582,
+        "max_gradient": 62.89897967284878,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0001924508045171252,
+          "pde": 5.985600564063259e-05,
+          "geometric": 1.1537636901147707e-05,
+          "navier": 1.7218429865015515e-05
+        }
+      }
+    ]
+  },
+  {
+    "terminal_time": 1.2,
+    "gamma": 100.0,
+    "seed": 20260620,
+    "predicted_time": 0.9572637123557913,
+    "converged": true,
+    "reason": "refinement_converged",
+    "refinements": [
+      {
+        "iteration": 1,
+        "input_horizon": 1.2,
+        "effective_threshold": 100.0,
+        "detected_time": 1.005186677730837,
+        "max_gradient": 100.19311509972307,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.01838145646065602,
+          "pde": 0.009742208290031296,
+          "geometric": 0.0007955725671217593,
+          "navier": 0.0006835224994071338
+        }
+      },
+      {
+        "iteration": 2,
+        "input_horizon": 1.005186677730837,
+        "effective_threshold": 119.38081021019352,
+        "detected_time": 0.9730760129900135,
+        "max_gradient": 153.6601821088508,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.00856587217500116,
+          "pde": 0.004852312941025141,
+          "geometric": 0.00035863282959415434,
+          "navier": 0.00012723093803447492
+        }
+      },
+      {
+        "iteration": 3,
+        "input_horizon": 0.9730760129900135,
+        "effective_threshold": 123.32027344017116,
+        "detected_time": 0.9583678293913896,
+        "max_gradient": 139.54906493082913,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.003342715476151583,
+          "pde": 0.0025603433896850083,
+          "geometric": 7.268654131563735e-05,
+          "navier": 5.550667331020152e-05
+        }
+      },
+      {
+        "iteration": 4,
+        "input_horizon": 0.9583678293913896,
+        "effective_threshold": 125.21288415556045,
+        "detected_time": null,
+        "max_gradient": 98.88753647905877,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0010427493843879064,
+          "pde": 0.0006048776991570556,
+          "geometric": 3.832795079923098e-05,
+          "navier": 5.459217723854118e-05
+        }
+      },
+      {
+        "iteration": 5,
+        "input_horizon": 0.9657219211907015,
+        "effective_threshold": 124.25937256559752,
+        "detected_time": 0.9572637123557913,
+        "max_gradient": 134.6258115094765,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0003513506351144714,
+          "pde": 0.00013992734967196733,
+          "geometric": 1.8974654541511762e-05,
+          "navier": 2.1676740027386498e-05
+        }
+      }
+    ]
+  },
+  {
+    "terminal_time": 1.2,
+    "gamma": 200.0,
+    "seed": 20260620,
+    "predicted_time": 0.9604908618275431,
+    "converged": true,
+    "reason": "refinement_converged",
+    "refinements": [
+      {
+        "iteration": 1,
+        "input_horizon": 1.2,
+        "effective_threshold": 200.0,
+        "detected_time": 1.0101014146156007,
+        "max_gradient": 365.1892624644225,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.01838145646065602,
+          "pde": 0.009742208290031296,
+          "geometric": 0.0007955725671217593,
+          "navier": 0.0006835224994071338
+        }
+      },
+      {
+        "iteration": 2,
+        "input_horizon": 1.0101014146156007,
+        "effective_threshold": 237.59990484849806,
+        "detected_time": 0.9781307366484203,
+        "max_gradient": 356.4708467753014,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.004949469626050299,
+          "pde": 0.002856313825276587,
+          "geometric": 0.0001964013643853915,
+          "navier": 0.00012914215691979644
+        }
+      },
+      {
+        "iteration": 3,
+        "input_horizon": 0.9781307366484203,
+        "effective_threshold": 245.36597308286582,
+        "detected_time": 0.9595090655729358,
+        "max_gradient": 301.4747376422719,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.002484844917734072,
+          "pde": 0.0018987380306107575,
+          "geometric": 5.0624170712610804e-05,
+          "navier": 7.98651799972067e-05
+        }
+      },
+      {
+        "iteration": 4,
+        "input_horizon": 0.9595090655729358,
+        "effective_threshold": 250.12791292043994,
+        "detected_time": null,
+        "max_gradient": 95.09355908728499,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0008314501942050373,
+          "pde": 0.0005019703494233729,
+          "geometric": 2.7179106963816275e-05,
+          "navier": 5.768877514350164e-05
+        }
+      },
+      {
+        "iteration": 5,
+        "input_horizon": 0.9688199011106781,
+        "effective_threshold": 247.7240607102087,
+        "detected_time": 0.9604908618275431,
+        "max_gradient": 275.63062644706235,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0003323768111601658,
+          "pde": 0.00011247125028400542,
+          "geometric": 1.962890596781565e-05,
+          "navier": 2.3616501198003824e-05
+        }
+      }
+    ]
+  },
+  {
+    "terminal_time": 1.2,
+    "gamma": 400.0,
+    "seed": 20260620,
+    "predicted_time": 0.9618519641523382,
+    "converged": true,
+    "reason": "refinement_converged",
+    "refinements": [
+      {
+        "iteration": 1,
+        "input_horizon": 1.2,
+        "effective_threshold": 400.0,
+        "detected_time": 1.0124563921286303,
+        "max_gradient": 3019.176241856562,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.01838145646065602,
+          "pde": 0.009742208290031296,
+          "geometric": 0.0007955725671217593,
+          "navier": 0.0006835224994071338
+        }
+      },
+      {
+        "iteration": 2,
+        "input_horizon": 1.0124563921286303,
+        "effective_threshold": 474.09449308807075,
+        "detected_time": 0.978438585401313,
+        "max_gradient": 960.8025391542776,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0032315853793248293,
+          "pde": 0.0017061886324746915,
+          "geometric": 0.00014695099647334833,
+          "navier": 5.5886782116654495e-05
+        }
+      },
+      {
+        "iteration": 3,
+        "input_horizon": 0.978438585401313,
+        "effective_threshold": 490.5775458590739,
+        "detected_time": 0.9586976535159879,
+        "max_gradient": 507.7738906580478,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0021082226244591093,
+          "pde": 0.0016400776577152475,
+          "geometric": 4.130280756211886e-05,
+          "navier": 5.511689112267307e-05
+        }
+      },
+      {
+        "iteration": 4,
+        "input_horizon": 0.9586976535159879,
+        "effective_threshold": 500.6792269070628,
+        "detected_time": null,
+        "max_gradient": 74.77042277756857,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0006418559519753453,
+          "pde": 0.0003548489270324821,
+          "geometric": 2.395882952493113e-05,
+          "navier": 4.741872969355188e-05
+        }
+      },
+      {
+        "iteration": 5,
+        "input_horizon": 0.9685681194586504,
+        "effective_threshold": 495.5769143715781,
+        "detected_time": 0.9614432411856403,
+        "max_gradient": 851.90015807616,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.00031672662198413805,
+          "pde": 8.754304546202847e-05,
+          "geometric": 2.0019741396607558e-05,
+          "navier": 2.8986162556034026e-05
+        }
+      },
+      {
+        "iteration": 6,
+        "input_horizon": 0.9614432411856403,
+        "effective_threshold": 499.2494402561609,
+        "detected_time": null,
+        "max_gradient": 158.29981708688263,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0013647531456932036,
+          "pde": 0.0010914208067803958,
+          "geometric": 2.1879639430630872e-05,
+          "navier": 5.453594460649897e-05
+        }
+      },
+      {
+        "iteration": 7,
+        "input_horizon": 0.9650056803221454,
+        "effective_threshold": 497.4063985196054,
+        "detected_time": 0.9618519641523382,
+        "max_gradient": 809.1898650986733,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.00021460879336740292,
+          "pde": 6.824466272368236e-05,
+          "geometric": 1.3444080983036287e-05,
+          "navier": 1.1923320813357668e-05
+        }
+      }
+    ]
+  },
+  {
+    "terminal_time": 1.2,
+    "gamma": 800.0,
+    "seed": 20260620,
+    "predicted_time": 0.9623001484930539,
+    "converged": true,
+    "reason": "refinement_converged",
+    "refinements": [
+      {
+        "iteration": 1,
+        "input_horizon": 1.2,
+        "effective_threshold": 800.0,
+        "detected_time": 1.0128188369541566,
+        "max_gradient": 3019.176241856562,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.01838145646065602,
+          "pde": 0.009742208290031296,
+          "geometric": 0.0007955725671217593,
+          "navier": 0.0006835224994071338
+        }
+      },
+      {
+        "iteration": 2,
+        "input_horizon": 1.0128188369541566,
+        "effective_threshold": 947.8496696279876,
+        "detected_time": 0.9824032960189827,
+        "max_gradient": 29208.467296634204,
+        "valid_fraction": 0.9999745973682873,
+        "losses": {
+          "total": 0.005016016059030889,
+          "pde": 0.0028500830550086294,
+          "geometric": 0.00020058603431729642,
+          "navier": 0.00016007266084929614
+        }
+      },
+      {
+        "iteration": 3,
+        "input_horizon": 0.9824032960189827,
+        "effective_threshold": 977.1954185111471,
+        "detected_time": 0.9608860598102748,
+        "max_gradient": 4263.140134999034,
+        "valid_fraction": 0.9999244142101285,
+        "losses": {
+          "total": 0.002797401384410356,
+          "pde": 0.002159576202364195,
+          "geometric": 5.8495452839126035e-05,
+          "navier": 5.28706536549005e-05
+        }
+      },
+      {
+        "iteration": 4,
+        "input_horizon": 0.9608860598102748,
+        "effective_threshold": 999.0778721355892,
+        "detected_time": null,
+        "max_gradient": 104.36325675207507,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0008487411815887261,
+          "pde": 0.0005124158333175484,
+          "geometric": 2.722845506793679e-05,
+          "navier": 6.404079759180978e-05
+        }
+      },
+      {
+        "iteration": 5,
+        "input_horizon": 0.9716446779146287,
+        "effective_threshold": 988.0154976615311,
+        "detected_time": 0.964593458829669,
+        "max_gradient": 1479.4032547586755,
+        "valid_fraction": 0.999900638398291,
+        "losses": {
+          "total": 0.000350042292557922,
+          "pde": 0.00012201715082219128,
+          "geometric": 2.1033559874179e-05,
+          "navier": 1.7689542993940758e-05
+        }
+      },
+      {
+        "iteration": 6,
+        "input_horizon": 0.964593458829669,
+        "effective_threshold": 995.2379328434985,
+        "detected_time": null,
+        "max_gradient": 193.158284965086,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0013055888554375746,
+          "pde": 0.0009154332996250819,
+          "geometric": 3.2140568237751904e-05,
+          "navier": 6.874987343497372e-05
+        }
+      },
+      {
+        "iteration": 7,
+        "input_horizon": 0.9681190683721488,
+        "effective_threshold": 991.613564242877,
+        "detected_time": 0.9623001484930539,
+        "max_gradient": 80632.70532358928,
+        "valid_fraction": 0.9999008379195795,
+        "losses": {
+          "total": 0.00023462572223431697,
+          "pde": 6.871220642295971e-05,
+          "geometric": 1.5231689524351418e-05,
+          "navier": 1.359662056784308e-05
+        }
+      }
+    ]
+  },
+  {
+    "terminal_time": 1.5,
+    "gamma": 50.0,
+    "seed": 20260620,
+    "predicted_time": 0.9532485611996347,
+    "converged": true,
+    "reason": "threshold_bracket_converged",
+    "refinements": [
+      {
+        "iteration": 1,
+        "input_horizon": 1.5,
+        "effective_threshold": 50.0,
+        "detected_time": 1.0207431626518098,
+        "max_gradient": 53.20970711455932,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.021510701580939914,
+          "pde": 0.011548472656810752,
+          "geometric": 0.000903686029351387,
+          "navier": 0.0009253686306152937
+        }
+      },
+      {
+        "iteration": 2,
+        "input_horizon": 1.0207431626518098,
+        "effective_threshold": 73.47587791345666,
+        "detected_time": 0.9643213861365654,
+        "max_gradient": 80.10027527219059,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.00820219814430776,
+          "pde": 0.004532981844899294,
+          "geometric": 0.00035597574015585015,
+          "navier": 0.00010945889784996351
+        }
+      },
+      {
+        "iteration": 3,
+        "input_horizon": 0.9643213861365654,
+        "effective_threshold": 77.774900648505,
+        "detected_time": 0.9549463320606342,
+        "max_gradient": 89.1900032944656,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0032814317231295463,
+          "pde": 0.0026929600840092886,
+          "geometric": 5.143908027550057e-05,
+          "navier": 7.40808363652521e-05
+        }
+      },
+      {
+        "iteration": 4,
+        "input_horizon": 0.9549463320606342,
+        "effective_threshold": 78.5384450225187,
+        "detected_time": null,
+        "max_gradient": 61.40500965517099,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0010919932268807226,
+          "pde": 0.0006695009805561829,
+          "geometric": 3.524823741503924e-05,
+          "navier": 7.00098721741473e-05
+        }
+      },
+      {
+        "iteration": 5,
+        "input_horizon": 0.9596338590985998,
+        "effective_threshold": 78.15480799150706,
+        "detected_time": 0.9515507903386353,
+        "max_gradient": 80.38903056110367,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.000294549107993182,
+          "pde": 0.000109903854923385,
+          "geometric": 1.571055801447663e-05,
+          "navier": 2.7539672925030675e-05
+        }
+      },
+      {
+        "iteration": 6,
+        "input_horizon": 0.9515507903386353,
+        "effective_threshold": 78.81870391102214,
+        "detected_time": 0.9481784065987351,
+        "max_gradient": 88.95512158861706,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.001080009782729284,
+          "pde": 0.0008690941899705308,
+          "geometric": 1.789264325392832e-05,
+          "navier": 3.1989160219469956e-05
+        }
+      },
+      {
+        "iteration": 7,
+        "input_horizon": 0.9481784065987351,
+        "effective_threshold": 79.09903819581463,
+        "detected_time": null,
+        "max_gradient": 75.19502359004674,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.00013167181982679869,
+          "pde": 4.237624538600691e-05,
+          "geometric": 8.394350340293539e-06,
+          "navier": 5.352071037856357e-06
+        }
+      }
+    ]
+  },
+  {
+    "terminal_time": 1.5,
+    "gamma": 100.0,
+    "seed": 20260620,
+    "predicted_time": 0.9572681673151479,
+    "converged": true,
+    "reason": "refinement_converged",
+    "refinements": [
+      {
+        "iteration": 1,
+        "input_horizon": 1.5,
+        "effective_threshold": 100.0,
+        "detected_time": 1.0306790533799044,
+        "max_gradient": 103.12606416810429,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.021510701580939914,
+          "pde": 0.011548472656810752,
+          "geometric": 0.000903686029351387,
+          "navier": 0.0009253686306152937
+        }
+      },
+      {
+        "iteration": 2,
+        "input_horizon": 1.0306790533799044,
+        "effective_threshold": 145.53512027638985,
+        "detected_time": 0.9796229503273874,
+        "max_gradient": 181.07158753985112,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.00903160867272232,
+          "pde": 0.00503175841384061,
+          "geometric": 0.0003869708268121891,
+          "navier": 0.00013014199075981914
+        }
+      },
+      {
+        "iteration": 3,
+        "input_horizon": 0.9796229503273874,
+        "effective_threshold": 153.12013662998646,
+        "detected_time": 0.9676238981122417,
+        "max_gradient": 157.2897232382566,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.006053744713767396,
+          "pde": 0.004271088026996733,
+          "geometric": 0.00016636565748567002,
+          "navier": 0.00011900011191396291
+        }
+      },
+      {
+        "iteration": 4,
+        "input_horizon": 0.9676238981122417,
+        "effective_threshold": 155.01890795859654,
+        "detected_time": null,
+        "max_gradient": 106.31423260178761,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.001928455381852493,
+          "pde": 0.0013199229937528498,
+          "geometric": 5.78243325150435e-05,
+          "navier": 3.0289062949208188e-05
+        }
+      },
+      {
+        "iteration": 5,
+        "input_horizon": 0.9736234242198145,
+        "effective_threshold": 154.06367212271854,
+        "detected_time": 0.9579610791902432,
+        "max_gradient": 155.05173204337154,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0004339024152560987,
+          "pde": 0.00017445611650505574,
+          "geometric": 2.2407096428862166e-05,
+          "navier": 3.5375334462421333e-05
+        }
+      },
+      {
+        "iteration": 6,
+        "input_horizon": 0.9579610791902432,
+        "effective_threshold": 156.58256192077636,
+        "detected_time": null,
+        "max_gradient": 110.00336471361327,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0010606259170288733,
+          "pde": 0.0007993606159812187,
+          "geometric": 2.3510182325377296e-05,
+          "navier": 2.6163477793881726e-05
+        }
+      },
+      {
+        "iteration": 7,
+        "input_horizon": 0.9706236611660282,
+        "effective_threshold": 154.539813937569,
+        "detected_time": 0.9572681673151479,
+        "max_gradient": 205.54267837802917,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0002058333997895367,
+          "pde": 6.499160871695393e-05,
+          "geometric": 1.3004833895736383e-05,
+          "navier": 1.0793452115218942e-05
+        }
+      }
+    ]
+  },
+  {
+    "terminal_time": 1.5,
+    "gamma": 200.0,
+    "seed": 20260620,
+    "predicted_time": 0.9613870591893638,
+    "converged": true,
+    "reason": "refinement_converged",
+    "refinements": [
+      {
+        "iteration": 1,
+        "input_horizon": 1.5,
+        "effective_threshold": 200.0,
+        "detected_time": 1.0352913424035872,
+        "max_gradient": 273.17879737896874,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.021510701580939914,
+          "pde": 0.011548472656810752,
+          "geometric": 0.000903686029351387,
+          "navier": 0.0009253686306152937
+        }
+      },
+      {
+        "iteration": 2,
+        "input_horizon": 1.0352913424035872,
+        "effective_threshold": 289.7735040491154,
+        "detected_time": 0.9711422024864578,
+        "max_gradient": 584.5359731412889,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.003960865276058337,
+          "pde": 0.002521400599973513,
+          "geometric": 0.00013656926884063263,
+          "navier": 7.377198767849774e-05
+        }
+      },
+      {
+        "iteration": 3,
+        "input_horizon": 0.9711422024864578,
+        "effective_threshold": 308.91459482648054,
+        "detected_time": 0.963249739310349,
+        "max_gradient": 315.56512628386355,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0027451693555831176,
+          "pde": 0.002235537076949372,
+          "geometric": 4.3684091806515e-05,
+          "navier": 7.279136056859578e-05
+        }
+      },
+      {
+        "iteration": 4,
+        "input_horizon": 0.963249739310349,
+        "effective_threshold": 311.4457110725915,
+        "detected_time": null,
+        "max_gradient": 101.71373671549003,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0010356336986731352,
+          "pde": 0.0006663804738987662,
+          "geometric": 3.153001296780753e-05,
+          "navier": 5.395309509629362e-05
+        }
+      },
+      {
+        "iteration": 5,
+        "input_horizon": 0.9671959708984034,
+        "effective_threshold": 310.1749893781482,
+        "detected_time": 0.9613870591893638,
+        "max_gradient": 771.8902897526123,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.00030360225478766193,
+          "pde": 0.00010541377205909189,
+          "geometric": 1.719754315476522e-05,
+          "navier": 2.621305118091785e-05
+        }
+      }
+    ]
+  },
+  {
+    "terminal_time": 1.5,
+    "gamma": 400.0,
+    "seed": 20260620,
+    "predicted_time": 0.9619504503961818,
+    "converged": true,
+    "reason": "refinement_converged",
+    "refinements": [
+      {
+        "iteration": 1,
+        "input_horizon": 1.5,
+        "effective_threshold": 400.0,
+        "detected_time": 1.03737585065174,
+        "max_gradient": 1536.762105495454,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.021510701580939914,
+          "pde": 0.011548472656810752,
+          "geometric": 0.000903686029351387,
+          "navier": 0.0009253686306152937
+        }
+      },
+      {
+        "iteration": 2,
+        "input_horizon": 1.03737585065174,
+        "effective_threshold": 578.3824634273537,
+        "detected_time": 0.9707437062554969,
+        "max_gradient": 595.3530701178587,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.004307125531546135,
+          "pde": 0.002629723597341839,
+          "geometric": 0.00015906662888456066,
+          "navier": 8.67356453586904e-05
+        }
+      },
+      {
+        "iteration": 3,
+        "input_horizon": 0.9707437062554969,
+        "effective_threshold": 618.0828123155318,
+        "detected_time": 0.9640677919462451,
+        "max_gradient": 844.7903623304346,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.00279837905692872,
+          "pde": 0.002244517599686183,
+          "geometric": 4.624362465930013e-05,
+          "navier": 9.142521064953567e-05
+        }
+      },
+      {
+        "iteration": 4,
+        "input_horizon": 0.9640677919462451,
+        "effective_threshold": 622.3628722091516,
+        "detected_time": null,
+        "max_gradient": 146.23504254790575,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.000999152244781268,
+          "pde": 0.0006282517882201386,
+          "geometric": 3.212958987699274e-05,
+          "navier": 4.960455779120199e-05
+        }
+      },
+      {
+        "iteration": 5,
+        "input_horizon": 0.967405749100871,
+        "effective_threshold": 620.2154582579789,
+        "detected_time": 0.9619504503961818,
+        "max_gradient": 1623.0391692822423,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0003003375422637876,
+          "pde": 0.00010063254322498327,
+          "geometric": 1.7234188026827843e-05,
+          "navier": 2.7363118770525948e-05
+        }
+      }
+    ]
+  },
+  {
+    "terminal_time": 1.5,
+    "gamma": 800.0,
+    "seed": 20260620,
+    "predicted_time": 0.9641923738404976,
+    "converged": true,
+    "reason": "refinement_converged",
+    "refinements": [
+      {
+        "iteration": 1,
+        "input_horizon": 1.5,
+        "effective_threshold": 800.0,
+        "detected_time": 1.0383274339798008,
+        "max_gradient": 1536.762105495454,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.021510701580939914,
+          "pde": 0.011548472656810752,
+          "geometric": 0.000903686029351387,
+          "navier": 0.0009253686306152937
+        }
+      },
+      {
+        "iteration": 2,
+        "input_horizon": 1.0383274339798008,
+        "effective_threshold": 1155.704800556531,
+        "detected_time": 0.9928643184689961,
+        "max_gradient": 5173.904436321174,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.006108157357534696,
+          "pde": 0.0036728045647831304,
+          "geometric": 0.00022827821899531578,
+          "navier": 0.00015257060279840807
+        }
+      },
+      {
+        "iteration": 3,
+        "input_horizon": 0.9928643184689961,
+        "effective_threshold": 1208.6243585129623,
+        "detected_time": 0.9611934942027569,
+        "max_gradient": 9329.463812688258,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.003082419575110677,
+          "pde": 0.0024736898883016513,
+          "geometric": 5.46876937599563e-05,
+          "navier": 6.18527492094627e-05
+        }
+      },
+      {
+        "iteration": 4,
+        "input_horizon": 0.9611934942027569,
+        "effective_threshold": 1248.4479006959118,
+        "detected_time": null,
+        "max_gradient": 85.11624614481366,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.00090562286378234,
+          "pde": 0.0005589438626656177,
+          "geometric": 3.072874772117886e-05,
+          "navier": 3.939152390493375e-05
+        }
+      },
+      {
+        "iteration": 5,
+        "input_horizon": 0.9770289063358766,
+        "effective_threshold": 1228.2134051696848,
+        "detected_time": 0.9653527165832609,
+        "max_gradient": 12281.202179361317,
+        "valid_fraction": 0.9999251777029555,
+        "losses": {
+          "total": 0.0003783794211385466,
+          "pde": 0.0001312889886329001,
+          "geometric": 2.229625711077826e-05,
+          "navier": 2.4127861397863874e-05
+        }
+      },
+      {
+        "iteration": 6,
+        "input_horizon": 0.9653527165832609,
+        "effective_threshold": 1243.0689626556832,
+        "detected_time": 0.9641923738404976,
+        "max_gradient": 2467.092524119397,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0011768094353105138,
+          "pde": 0.0009091521748229213,
+          "geometric": 2.2695001530896573e-05,
+          "navier": 4.07072451786268e-05
+        }
+      }
+    ]
+  },
+  {
+    "terminal_time": 1.8,
+    "gamma": 50.0,
+    "seed": 20260620,
+    "predicted_time": 0.9524619053246474,
+    "converged": true,
+    "reason": "refinement_converged",
+    "refinements": [
+      {
+        "iteration": 1,
+        "input_horizon": 1.8,
+        "effective_threshold": 50.0,
+        "detected_time": 1.2127841890390085,
+        "max_gradient": 58.024785208761415,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.045080075839612634,
+          "pde": 0.027462199661411314,
+          "geometric": 0.0016367910420292014,
+          "navier": 0.0012499657579093037
+        }
+      },
+      {
+        "iteration": 2,
+        "input_horizon": 1.2127841890390085,
+        "effective_threshold": 74.20941072072733,
+        "detected_time": 0.9447493205425224,
+        "max_gradient": 77.71123782136358,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.01015105831908844,
+          "pde": 0.0045717124821521874,
+          "geometric": 0.0005516739171442003,
+          "navier": 6.260666549425027e-05
+        }
+      },
+      {
+        "iteration": 3,
+        "input_horizon": 0.9447493205425224,
+        "effective_threshold": 95.26336568129786,
+        "detected_time": null,
+        "max_gradient": 44.542885388430804,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0031877776429954712,
+          "pde": 0.002727449691858619,
+          "geometric": 3.855061840198515e-05,
+          "navier": 7.482176711700124e-05
+        }
+      },
+      {
+        "iteration": 4,
+        "input_horizon": 1.0787667547907653,
+        "effective_threshold": 83.42859992701217,
+        "detected_time": 0.9560255696227057,
+        "max_gradient": 96.35547668958704,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.00190552758883011,
+          "pde": 0.0010403149119833737,
+          "geometric": 8.027127310814944e-05,
+          "navier": 6.249994576524214e-05
+        }
+      },
+      {
+        "iteration": 5,
+        "input_horizon": 0.9560255696227057,
+        "effective_threshold": 94.13974150871131,
+        "detected_time": 0.9529120418020763,
+        "max_gradient": 105.15806272133644,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0003681823140651157,
+          "pde": 0.00014772267438119523,
+          "geometric": 1.8668147523074744e-05,
+          "navier": 3.377816445317299e-05
+        }
+      },
+      {
+        "iteration": 6,
+        "input_horizon": 0.9529120418020763,
+        "effective_threshold": 94.44733202216513,
+        "detected_time": null,
+        "max_gradient": 76.28833470141427,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.001403250235556349,
+          "pde": 0.0010767197388360922,
+          "geometric": 2.8433062500513236e-05,
+          "navier": 4.219987171512443e-05
+        }
+      },
+      {
+        "iteration": 7,
+        "input_horizon": 0.954468805712391,
+        "effective_threshold": 94.29328592129977,
+        "detected_time": 0.9524619053246474,
+        "max_gradient": 95.01433909253261,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0002672996173765047,
+          "pde": 8.825141331535437e-05,
+          "geometric": 1.673717163365824e-05,
+          "navier": 1.1676487724567948e-05
+        }
+      }
+    ]
+  },
+  {
+    "terminal_time": 1.8,
+    "gamma": 100.0,
+    "seed": 20260620,
+    "predicted_time": 0.9519996679235059,
+    "converged": true,
+    "reason": "refinement_converged",
+    "refinements": [
+      {
+        "iteration": 1,
+        "input_horizon": 1.8,
+        "effective_threshold": 100.0,
+        "detected_time": 1.2227692687562337,
+        "max_gradient": 100.57099540984655,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.045080075839612634,
+          "pde": 0.027462199661411314,
+          "geometric": 0.0016367910420292014,
+          "navier": 0.0012499657579093037
+        }
+      },
+      {
+        "iteration": 2,
+        "input_horizon": 1.2227692687562337,
+        "effective_threshold": 147.20683991599734,
+        "detected_time": 0.9514319327518446,
+        "max_gradient": 192.14204483585712,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0131495021152948,
+          "pde": 0.006525179176446015,
+          "geometric": 0.0006383700717896772,
+          "navier": 0.00024062222095201394
+        }
+      },
+      {
+        "iteration": 3,
+        "input_horizon": 0.9514319327518446,
+        "effective_threshold": 189.18852080083397,
+        "detected_time": null,
+        "max_gradient": 63.48561680301864,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0037839575342489737,
+          "pde": 0.003018445040984546,
+          "geometric": 6.859982199611321e-05,
+          "navier": 7.951427330329548e-05
+        }
+      },
+      {
+        "iteration": 4,
+        "input_horizon": 1.0871006007540391,
+        "effective_threshold": 165.5780521831629,
+        "detected_time": 0.9519996679235059,
+        "max_gradient": 166.19224919017725,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.002053484375920001,
+          "pde": 0.0010059507223524281,
+          "geometric": 9.996439661563921e-05,
+          "navier": 4.7889687411180815e-05
+        }
+      }
+    ]
+  },
+  {
+    "terminal_time": 1.8,
+    "gamma": 200.0,
+    "seed": 20260620,
+    "predicted_time": 0.9634717849612693,
+    "converged": true,
+    "reason": "refinement_converged",
+    "refinements": [
+      {
+        "iteration": 1,
+        "input_horizon": 1.8,
+        "effective_threshold": 200.0,
+        "detected_time": 1.2271581154839297,
+        "max_gradient": 371.21998904297317,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.045080075839612634,
+          "pde": 0.027462199661411314,
+          "geometric": 0.0016367910420292014,
+          "navier": 0.0012499657579093037
+        }
+      },
+      {
+        "iteration": 2,
+        "input_horizon": 1.2271581154839297,
+        "effective_threshold": 293.3607295242749,
+        "detected_time": 0.957280520151715,
+        "max_gradient": 494.0771568621387,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.009343793259764619,
+          "pde": 0.004066647055626464,
+          "geometric": 0.0005194822260523573,
+          "navier": 8.232394361458127e-05
+        }
+      },
+      {
+        "iteration": 3,
+        "input_horizon": 0.957280520151715,
+        "effective_threshold": 376.0653146299741,
+        "detected_time": null,
+        "max_gradient": 70.57940738884709,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.003455797768821157,
+          "pde": 0.0027393065894558166,
+          "geometric": 6.325082965906865e-05,
+          "navier": 8.398288277465392e-05
+        }
+      },
+      {
+        "iteration": 4,
+        "input_horizon": 1.0922193178178223,
+        "effective_threshold": 329.6041318141624,
+        "detected_time": 0.9657933021839691,
+        "max_gradient": 570.4089994484486,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0025734824292410552,
+          "pde": 0.0012541189176337323,
+          "geometric": 0.00012860407249793684,
+          "navier": 3.332278662795435e-05
+        }
+      },
+      {
+        "iteration": 5,
+        "input_horizon": 0.9657933021839691,
+        "effective_threshold": 372.7505659709218,
+        "detected_time": 0.9634717849612693,
+        "max_gradient": 408.7351067420386,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0003886503755091748,
+          "pde": 0.00013528682760883542,
+          "geometric": 2.1717113265403566e-05,
+          "navier": 3.619241524630372e-05
+        }
+      }
+    ]
+  },
+  {
+    "terminal_time": 1.8,
+    "gamma": 400.0,
+    "seed": 20260620,
+    "predicted_time": 0.963868179674991,
+    "converged": true,
+    "reason": "threshold_bracket_converged",
+    "refinements": [
+      {
+        "iteration": 1,
+        "input_horizon": 1.8,
+        "effective_threshold": 400.0,
+        "detected_time": 1.2301513470371395,
+        "max_gradient": 1509.2153433647568,
+        "valid_fraction": 0.9998920203001835,
+        "losses": {
+          "total": 0.045080075839612634,
+          "pde": 0.027462199661411314,
+          "geometric": 0.0016367910420292014,
+          "navier": 0.0012499657579093037
+        }
+      },
+      {
+        "iteration": 2,
+        "input_horizon": 1.2301513470371395,
+        "effective_threshold": 585.2938353757397,
+        "detected_time": 0.9515805320826314,
+        "max_gradient": 48397.959866482386,
+        "valid_fraction": 0.9999363624793178,
+        "losses": {
+          "total": 0.00961911674324451,
+          "pde": 0.0038746870751423966,
+          "geometric": 0.000566087914904889,
+          "navier": 8.35505190532235e-05
+        }
+      },
+      {
+        "iteration": 3,
+        "input_horizon": 0.9515805320826314,
+        "effective_threshold": 756.635908076226,
+        "detected_time": null,
+        "max_gradient": 65.30009369043627,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.00348769277283077,
+          "pde": 0.0027859833020258316,
+          "geometric": 6.157069320404002e-05,
+          "navier": 8.60025387645383e-05
+        }
+      },
+      {
+        "iteration": 4,
+        "input_horizon": 1.0908659395598854,
+        "effective_threshold": 660.026107598966,
+        "detected_time": 0.969849812219535,
+        "max_gradient": 860.7192640527818,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.002643782430026201,
+          "pde": 0.0012895385698080673,
+          "geometric": 0.00013239902855957398,
+          "navier": 3.0253574622394104e-05
+        }
+      },
+      {
+        "iteration": 5,
+        "input_horizon": 0.969849812219535,
+        "effective_threshold": 742.3829864463808,
+        "detected_time": 0.9640341994093323,
+        "max_gradient": 13288.158475821372,
+        "valid_fraction": 0.9999504189597898,
+        "losses": {
+          "total": 0.0004251855470694874,
+          "pde": 0.00013698424762506462,
+          "geometric": 2.5322325922213892e-05,
+          "navier": 3.497804022228381e-05
+        }
+      },
+      {
+        "iteration": 6,
+        "input_horizon": 0.9640341994093323,
+        "effective_threshold": 746.8614707249462,
+        "detected_time": null,
+        "max_gradient": 224.29322500442473,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0012607858303412451,
+          "pde": 0.0009390235826014684,
+          "geometric": 2.583804805937406e-05,
+          "navier": 6.338176714603612e-05
+        }
+      },
+      {
+        "iteration": 7,
+        "input_horizon": 0.9669420058144337,
+        "effective_threshold": 744.6154946940795,
+        "detected_time": 0.961142603157329,
+        "max_gradient": 33554.69715010303,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0002143754402945603,
+          "pde": 6.499430004048654e-05,
+          "geometric": 1.3165911201866253e-05,
+          "navier": 1.772202823541122e-05
+        }
+      },
+      {
+        "iteration": 8,
+        "input_horizon": 0.961142603157329,
+        "effective_threshold": 749.1084024730756,
+        "detected_time": null,
+        "max_gradient": 356.94105960434985,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.000209752587294366,
+          "pde": 7.720869072456446e-05,
+          "geometric": 1.2181362621758898e-05,
+          "navier": 1.0730270352212575e-05
+        }
+      },
+      {
+        "iteration": 9,
+        "input_horizon": 0.965488102611883,
+        "effective_threshold": 745.7367916313239,
+        "detected_time": 0.9637021599406499,
+        "max_gradient": 4179.20073146074,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.00015426830003172345,
+          "pde": 4.910985965163508e-05,
+          "geometric": 9.395384170885652e-06,
+          "navier": 1.120459867123182e-05
+        }
+      },
+      {
+        "iteration": 10,
+        "input_horizon": 0.9637021599406499,
+        "effective_threshold": 747.1187986590603,
+        "detected_time": 0.9600503680906771,
+        "max_gradient": 3210.4211426544443,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.00015877798480891234,
+          "pde": 6.972508758007254e-05,
+          "geometric": 8.130987465454349e-06,
+          "navier": 7.743022574296316e-06
+        }
+      },
+      {
+        "iteration": 11,
+        "input_horizon": 0.9600503680906771,
+        "effective_threshold": 749.960651993621,
+        "detected_time": null,
+        "max_gradient": 324.1019505772206,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.00015310527901638512,
+          "pde": 6.201231692195038e-05,
+          "geometric": 8.59180621776365e-06,
+          "navier": 5.174899916798222e-06
+        }
+      }
+    ]
+  },
+  {
+    "terminal_time": 1.8,
+    "gamma": 800.0,
+    "seed": 20260620,
+    "predicted_time": 0.9658843200542009,
+    "converged": true,
+    "reason": "threshold_bracket_converged",
+    "refinements": [
+      {
+        "iteration": 1,
+        "input_horizon": 1.8,
+        "effective_threshold": 800.0,
+        "detected_time": 1.2314192658964418,
+        "max_gradient": 1509.2153433647568,
+        "valid_fraction": 0.9998920203001835,
+        "losses": {
+          "total": 0.045080075839612634,
+          "pde": 0.027462199661411314,
+          "geometric": 0.0016367910420292014,
+          "navier": 0.0012499657579093037
+        }
+      },
+      {
+        "iteration": 2,
+        "input_horizon": 1.2314192658964418,
+        "effective_threshold": 1169.3823865519246,
+        "detected_time": 0.9507233786026466,
+        "max_gradient": 3518.9328300369634,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.009922281674634346,
+          "pde": 0.0039026691157387854,
+          "geometric": 0.0005968434029833156,
+          "navier": 5.117852906240642e-05
+        }
+      },
+      {
+        "iteration": 3,
+        "input_horizon": 0.9507233786026466,
+        "effective_threshold": 1514.6361522280877,
+        "detected_time": null,
+        "max_gradient": 60.76249877004786,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0030796203043248634,
+          "pde": 0.002578962559366595,
+          "geometric": 4.073161306819822e-05,
+          "navier": 9.334161427628634e-05
+        }
+      },
+      {
+        "iteration": 4,
+        "input_horizon": 1.0910713222495443,
+        "effective_threshold": 1319.803729265877,
+        "detected_time": 0.9630027581985645,
+        "max_gradient": 2565.0666711217204,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0020930447122593085,
+          "pde": 0.0010442267540401045,
+          "geometric": 0.0001020163814399341,
+          "navier": 2.865414381986282e-05
+        }
+      },
+      {
+        "iteration": 5,
+        "input_horizon": 0.9630027581985645,
+        "effective_threshold": 1495.3228199405448,
+        "detected_time": null,
+        "max_gradient": 262.2222239420502,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.00047773528721671034,
+          "pde": 0.00022776523774215495,
+          "geometric": 2.2512341750321348e-05,
+          "navier": 2.4846631971341912e-05
+        }
+      },
+      {
+        "iteration": 6,
+        "input_horizon": 1.0270370402240543,
+        "effective_threshold": 1402.0915931969264,
+        "detected_time": 0.9582520029099224,
+        "max_gradient": 2131.524521189847,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0018351207587474975,
+          "pde": 0.001178254215607724,
+          "geometric": 5.7779908118784655e-05,
+          "navier": 7.906746195192698e-05
+        }
+      },
+      {
+        "iteration": 7,
+        "input_horizon": 0.9582520029099224,
+        "effective_threshold": 1502.7362276594824,
+        "detected_time": null,
+        "max_gradient": 239.94362723151838,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.00030201805221996634,
+          "pde": 0.00012806504570499064,
+          "geometric": 1.6182727219948738e-05,
+          "navier": 1.2125734315488336e-05
+        }
+      },
+      {
+        "iteration": 8,
+        "input_horizon": 0.9950198992113094,
+        "effective_threshold": 1447.2072379068989,
+        "detected_time": 0.9648760916945942,
+        "max_gradient": 1523.8584670872183,
+        "valid_fraction": 0.9998981799669084,
+        "losses": {
+          "total": 0.00043835621939565533,
+          "pde": 0.00016542542438664946,
+          "geometric": 2.543431894835556e-05,
+          "navier": 1.8587605525450297e-05
+        }
+      },
+      {
+        "iteration": 9,
+        "input_horizon": 0.9648760916945942,
+        "effective_threshold": 1492.419609517896,
+        "detected_time": null,
+        "max_gradient": 694.283474027532,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.00021649435740924035,
+          "pde": 7.007947887046083e-05,
+          "geometric": 1.376228577177003e-05,
+          "navier": 8.792020821079217e-06
+        }
+      },
+      {
+        "iteration": 10,
+        "input_horizon": 0.9799479954529517,
+        "effective_threshold": 1469.4657335713034,
+        "detected_time": 0.9609573492639549,
+        "max_gradient": 3551.6694668118903,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.00029942003493822934,
+          "pde": 0.00014439022556175888,
+          "geometric": 1.447924091914012e-05,
+          "navier": 1.0237400185069233e-05
+        }
+      },
+      {
+        "iteration": 11,
+        "input_horizon": 0.9609573492639549,
+        "effective_threshold": 1498.5056320168296,
+        "detected_time": null,
+        "max_gradient": 286.4145748638955,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.0002135891365545282,
+          "pde": 9.864963926019699e-05,
+          "geometric": 9.593060202357779e-06,
+          "navier": 1.9008895270753407e-05
+        }
+      },
+      {
+        "iteration": 12,
+        "input_horizon": 0.972412043573773,
+        "effective_threshold": 1480.853728125132,
+        "detected_time": 0.9568238201652634,
+        "max_gradient": 123660.11291439543,
+        "valid_fraction": 0.9998998322189667,
+        "losses": {
+          "total": 0.00014626838118893013,
+          "pde": 6.137893928403419e-05,
+          "geometric": 7.758330745690736e-06,
+          "navier": 7.3061344479885725e-06
+        }
+      },
+      {
+        "iteration": 13,
+        "input_horizon": 0.9568238201652634,
+        "effective_threshold": 1504.9792549596875,
+        "detected_time": null,
+        "max_gradient": 170.5173829829447,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.00013192314458720185,
+          "pde": 4.928999598029277e-05,
+          "geometric": 7.622851398863423e-06,
+          "navier": 6.404634618274881e-06
+        }
+      },
+      {
+        "iteration": 14,
+        "input_horizon": 0.9686440676341836,
+        "effective_threshold": 1486.6141734776286,
+        "detected_time": 0.9668925484138075,
+        "max_gradient": 5739.723753631854,
+        "valid_fraction": 0.9998765432098765,
+        "losses": {
+          "total": 0.0001607780794964724,
+          "pde": 6.474013026605361e-05,
+          "geometric": 8.709295579994002e-06,
+          "navier": 8.9449934304788e-06
+        }
+      },
+      {
+        "iteration": 15,
+        "input_horizon": 0.9668925484138075,
+        "effective_threshold": 1489.3071648574892,
+        "detected_time": 0.9632024590159353,
+        "max_gradient": 10175.260018387598,
+        "valid_fraction": 0.9999505183205918,
+        "losses": {
+          "total": 0.00011093434731159064,
+          "pde": 4.44901836188157e-05,
+          "geometric": 5.9391935052223905e-06,
+          "navier": 7.0522286405510395e-06
+        }
+      },
+      {
+        "iteration": 16,
+        "input_horizon": 0.9632024590159353,
+        "effective_threshold": 1495.0127945802685,
+        "detected_time": null,
+        "max_gradient": 428.4683840583606,
+        "valid_fraction": 1.0,
+        "losses": {
+          "total": 0.00021133513549565926,
+          "pde": 0.00010890030218184826,
+          "geometric": 8.921449728260161e-06,
+          "navier": 1.3220336031209391e-05
+        }
+      }
+    ]
+  }
+]
